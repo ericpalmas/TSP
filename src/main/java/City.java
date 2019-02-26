@@ -3,14 +3,25 @@ public class City {
     private Integer id;
     private Integer latitude;
     private Integer longitude;
+    private boolean visited;
+
 
     public City(Integer latitude,Integer longitude,Integer id){
         this.latitude = latitude;
         this.longitude = longitude;
         this.id = id;
+        this.visited = false;
     }
 
     public City(){ }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
 
     public Integer getId() {
         return id;
