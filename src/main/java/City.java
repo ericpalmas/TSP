@@ -31,9 +31,7 @@ public class City {
         this.id = id;
     }
 
-    public Integer getLatitude() {
-        return latitude;
-    }
+    public Integer getLatitude() { return latitude; }
 
     public void setLatitude(Integer latitude) {
         this.latitude = latitude;

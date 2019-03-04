@@ -1,54 +1,70 @@
 import java.util.ArrayList;
-import java.lang.Math;
 
 public class Controller {
-    public static ArrayList<City> cities = new ArrayList<>();
-    private static Integer[][] adjacencyMatrix;
-    private static ArrayList<City> minPath = new ArrayList<>();
+    public static void main(String[] args) {
+        TspReader tspReader = new TspReader(args[0]);
+        ArrayList<City> cities = tspReader.getCities();
 
-    public static void main(String[] args){
+        DistanceMatrix distanceMatrix = new DistanceMatrix(cities.size());
+        distanceMatrix.calculateDistance(cities);
 
-        TspReader tspReader = new TspReader("src/files/" + args[0]);
-        tspReader.getCitiesInfo();
-        adjacencyMatrix = new Integer[cities.size()][cities.size()];
-        calculateDistance();
-        nearestNeighbor();
-        for(City c : minPath){
-            System.out.println(c);
-        }
+        NeirestNeighbor neirestNeighbor = new NeirestNeighbor(cities,distanceMatrix);
+        Tour minPath  = neirestNeighbor.calculatePath();
+        System.out.println("nearestNeighbor: \n");
+        System.out.println("Errore relativo: " + ((minPath.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
+
+        Tour newTour = twoOpt(minPath,distanceMatrix);
+        System.out.println("\nTwoOpt: \n");
+        System.out.println("Errore relativo: " + ((newTour.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
     }
 
-    private static void nearestNeighbor() {
-        int min,count, i, minPos = 0;
-        minPath.add(cities.get(0));
-        cities.get(0).setVisited(true);
-        for(count = 0;count<cities.size();count++){
-            min = Integer.MAX_VALUE;
-            i = minPos;
-            for(int j=0;j<cities.size();j++){
-                if(adjacencyMatrix[i][j]!=0 && adjacencyMatrix[i][j]<min && !cities.get(j).isVisited()){
-                    min = adjacencyMatrix[i][j];
-                    minPos = j;
+
+    // Do all 2-opt combinations
+    private static Tour twoOpt(Tour minPath,DistanceMatrix distanceMatrix) {
+        Tour newTour = new Tour();
+        int size = minPath.getTourSize();
+        for (int i = 0; i < size; i++) {
+            newTour.setCity(i, minPath.getCity(i));
+        }
+        // repeat until no improvement is made
+        int improve = 0, iteration = 0;
+        while (improve < 800) {
+            double best_distance = minPath.getTourDistance(distanceMatrix);
+            for (int i = 1; i < size - 1; i++) {
+                for (int k = i + 1; k < size; k++) {
+                    twoOptSwap(minPath, newTour, i, k);
+                    iteration++;
+                    double new_distance = newTour.getTourDistance(distanceMatrix);
+                    if (new_distance < best_distance) {
+                        improve = 0;
+                        for (int j = 0; j < size; j++) {
+                            minPath.setCity(j, newTour.getCity(j));
+                        }
+                        best_distance = new_distance;
+                    }
                 }
             }
-            if(min==Integer.MAX_VALUE)
-                break;
-            cities.get(minPos).setVisited(true);
-            minPath.add(cities.get(minPos));
+            improve++;
         }
-        minPath.add(cities.get(0));
+        return newTour;
     }
 
-    public static int distFrom(double lat1, double lng1, double lat2, double lng2) {
-        int dist = (int) (Math.sqrt(Math.pow(lat2-lat1,2)+Math.pow(lng2-lng1,2)) + 0.5);
-        return dist;
-    }
 
-    private static void calculateDistance() {
-        for(int i=0;i<cities.size();i++){
-            for(int j=0;j<cities.size();j++){
-                    adjacencyMatrix[i][j] = distFrom(cities.get(i).getLatitude(),cities.get(i).getLongitude(),cities.get(j).getLatitude(),cities.get(j).getLongitude());
-            }
+    public static void twoOptSwap(Tour tour, Tour newTour, int i, int k) {
+        int size = tour.getTourSize();
+        // 1. take route[0] to route[i-1] and add them in order to new_route
+        for (int c = 0; c <= i - 1; ++c) {
+            newTour.setCity(c, tour.getCity(c));
+        }
+        // 2. take route[i] to route[k] and add them in reverse order to new_route
+        int dec = 0;
+        for (int c = i; c <= k; ++c) {
+            newTour.setCity(c, tour.getCity(k - dec));
+            dec++;
+        }
+        // 3. take route[k+1] to end and add them in order to new_route
+        for (int c = k + 1; c < size; ++c) {
+            newTour.setCity(c, tour.getCity(c));
         }
     }
 }
