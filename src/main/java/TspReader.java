@@ -80,7 +80,7 @@ public class TspReader {
         }
         City city = new City();
         String[] informations = line.split(" ");
-        city.setId(Integer.parseInt(informations[0]));
+        city.setId(Integer.parseInt(informations[0])-1);
         city.setLatitude((int)Double.parseDouble(informations[1]));
         city.setLongitude((int)Double.parseDouble(informations[2]));
         return city;

@@ -1,70 +1,60 @@
 import java.util.ArrayList;
 
+
 public class Controller {
+    public static void printCoordinates(Tour path, ArrayList<City> cities){
+        System.out.println("COORDINATE\n");
+        System.out.println("Latitudine:");
+        for(int i=0;i<path.getTourSize();i++){
+            System.out.println(cities.get(path.getCity(i).getId()).getLatitude());
+        }
+        System.out.println("Longitudine:");
+        for (int j=0;j<path.getTourSize();j++){
+            System.out.println(cities.get(path.getCity(j).getId()).getLongitude());
+        }
+        System.out.println("\n\n\n");
+    }
     public static void main(String[] args) {
         TspReader tspReader = new TspReader(args[0]);
         ArrayList<City> cities = tspReader.getCities();
+        DistanceMatrix distanceMatrix = new DistanceMatrix(cities);
+        long startTime = System.nanoTime();
 
-        DistanceMatrix distanceMatrix = new DistanceMatrix(cities.size());
-        distanceMatrix.calculateDistance(cities);
 
+        //Algoritmo costruttivo
         NeirestNeighbor neirestNeighbor = new NeirestNeighbor(cities,distanceMatrix);
-        Tour minPath  = neirestNeighbor.calculatePath();
-        System.out.println("nearestNeighbor: \n");
-        System.out.println("Errore relativo: " + ((minPath.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
+        Tour path  = neirestNeighbor.calculatePath();
+        System.out.println("\nNearestNeighbor -> Errore relativo = " + ((path.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
 
-        Tour newTour = twoOpt(minPath,distanceMatrix);
-        System.out.println("\nTwoOpt: \n");
-        System.out.println("Errore relativo: " + ((newTour.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
-    }
+        System.out.println("SIZE: " + path.getTourSize());
+        //printCoordinates(path,cities);
+        path.printCoordinates();
 
 
-    // Do all 2-opt combinations
-    private static Tour twoOpt(Tour minPath,DistanceMatrix distanceMatrix) {
-        Tour newTour = new Tour();
-        int size = minPath.getTourSize();
-        for (int i = 0; i < size; i++) {
-            newTour.setCity(i, minPath.getCity(i));
-        }
-        // repeat until no improvement is made
-        int improve = 0, iteration = 0;
-        while (improve < 800) {
-            double best_distance = minPath.getTourDistance(distanceMatrix);
-            for (int i = 1; i < size - 1; i++) {
-                for (int k = i + 1; k < size; k++) {
-                    twoOptSwap(minPath, newTour, i, k);
-                    iteration++;
-                    double new_distance = newTour.getTourDistance(distanceMatrix);
-                    if (new_distance < best_distance) {
-                        improve = 0;
-                        for (int j = 0; j < size; j++) {
-                            minPath.setCity(j, newTour.getCity(j));
-                        }
-                        best_distance = new_distance;
-                    }
-                }
-            }
-            improve++;
-        }
-        return newTour;
-    }
 
 
-    public static void twoOptSwap(Tour tour, Tour newTour, int i, int k) {
-        int size = tour.getTourSize();
-        // 1. take route[0] to route[i-1] and add them in order to new_route
-        for (int c = 0; c <= i - 1; ++c) {
-            newTour.setCity(c, tour.getCity(c));
-        }
-        // 2. take route[i] to route[k] and add them in reverse order to new_route
-        int dec = 0;
-        for (int c = i; c <= k; ++c) {
-            newTour.setCity(c, tour.getCity(k - dec));
-            dec++;
-        }
-        // 3. take route[k+1] to end and add them in order to new_route
-        for (int c = k + 1; c < size; ++c) {
-            newTour.setCity(c, tour.getCity(c));
-        }
+        //Algoritmo euristico
+        TwoOpt twoOpt = new TwoOpt(path,distanceMatrix);
+        Tour newTour = twoOpt.optimizePath();
+        System.out.println((newTour.getTourDistance(distanceMatrix)));
+        System.out.println("\nTwoOpt -> Errore relativo = " + ((newTour.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
+        //printCoordinates(newTour,cities);
+
+
+        //Algoritmo meta-euristico
+        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(newTour,distanceMatrix,cities,startTime);
+        Tour finalTour = simulatedAnnealing.computeSolution();
+        System.out.println("\nSA -> Errore relativo = " + ((finalTour.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
+
+
+        //meta-euristico secondo approccio
+//        RandomApproach randomApproach = new RandomApproach(distanceMatrix,newTour,cities,startTime);
+//        Tour finalT = randomApproach.computeSolution();
+//        System.out.println("\nRANDOM -> Errore relativo = " + ((finalT.getTourDistance(distanceMatrix) - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " %");
+
+
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println("\nExecution time: " + totalTime * 1.6667e-11 + " minutes");
     }
 }

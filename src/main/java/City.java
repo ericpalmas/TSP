@@ -1,4 +1,4 @@
-public class City {
+public class City{
 
     private Integer id;
     private Integer latitude;
@@ -53,4 +53,5 @@ public class City {
                 ", longitude=" + longitude +
                 '}';
     }
+
 }
