@@ -56,15 +56,13 @@ public class SimulatedAnnealing {
 
 
     public int[] executeDoubleBridge(int[] array) {
-        int num_cities = array.length - 1;
-
         Random random = new Random();
         int pos1, pos2, pos3, pos4;
         do {
-            pos1 = random.nextInt(num_cities);
-            pos2 = random.nextInt(num_cities);
-            pos3 = random.nextInt(num_cities);
-            pos4 = random.nextInt(num_cities);
+            pos1 = random.nextInt(array.length - 1);
+            pos2 = random.nextInt(array.length - 1);
+            pos3 = random.nextInt(array.length - 1);
+            pos4 = random.nextInt(array.length - 1);
         } while (pos1 < 0 || pos2 < pos1 || pos3 < pos2 || pos4 < pos3);
 
         int[] temp_solution = array.clone();

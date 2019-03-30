@@ -24,52 +24,52 @@ public class TspReader {
         switch (filename){
             case "ch130.tsp":{
                 bestKnown = 6110;
-                seed = 1553612458630L; //0.2782
+                seed = 1553951137790L;
             }
                 break;
             case "d198.tsp":{
                 bestKnown = 15780;
-                seed = 1553633314766L;
+                seed = 1553951143947L;
             }
                 break;
             case "eil76.tsp":{
                 bestKnown = 538;
-                seed = 1553612534651L; //0.1858
+                seed = 1553946425750L; //0.1858
             }
                 break;
             case "fl1577.tsp":{
                 bestKnown = 22249;
-                seed = 1553633423429L;
+                seed = 1553947134926L;
             }
                 break;
             case "kroA100.tsp":{
                 bestKnown = 21282;
-                seed = 1553521360686L; //0.06108
+                seed = 1553946589277L;
             }
                 break;
             case "lin318.tsp":{
                 bestKnown = 42029;
-                seed = 1553633633775L;
+                seed = 1553953812909L;
             }
                 break;
             case "pcb442.tsp":{
                 bestKnown = 50778;
-                seed = 1553633675199L;
+                seed = 1553947332208L;
             }
                 break;
             case "pr439.tsp":{
                 bestKnown = 107217;
-                seed = 1553633675199L;
+                seed = 1553952349308L;
             }
                 break;
             case "rat783.tsp":{
                 bestKnown = 8806;
-                seed = 1553633675199L;
+                seed = 1553952475947L;
             }
                 break;
             case "u1060.tsp":{
                 bestKnown = 224094;
-                seed = 1553633675199L;
+                seed = 1553954284783L;
             }
                 break;
         }

@@ -29,17 +29,19 @@ public class Main {
     seeds = new Long[10];
 
         while(true){
-            readSeeds();
+            //readSeeds();
             for (int i=0;i<10;i++){
+                long startTime = System.nanoTime();
+
                 System.out.println(files[i]+"\n\n");
                 TspReader tspReader = new TspReader(files[i]);
                 ArrayList<City> cities = tspReader.getCities();
                 DistanceMatrix distanceMatrix = new DistanceMatrix(cities);
-                long startTime = System.nanoTime();
 
                 Random random = new Random();
-                long seed = System.currentTimeMillis();
-                random.setSeed(seed);
+                //long seed = System.currentTimeMillis();
+                //random.setSeed(seed);
+                random.setSeed(tspReader.getSeed());
 
                 //Algoritmo costruttivo
                 NearestNeighbor neirestNeighbor = new NearestNeighbor(cities, distanceMatrix,random);
@@ -58,11 +60,11 @@ public class Main {
                 System.out.println("\nSA -> Errore relativo = " + ((dist - (double)bestKnowns[i]) / (double)bestKnowns[i]) * 100 + " %");
 
 
-                if(dist<costs[i]){
-                    costs[i] = dist;
-                    seeds[i] = seed;
-                    improve = true;
-                }
+//                if(dist<costs[i]){
+//                    costs[i] = dist;
+//                    seeds[i] = seed;
+//                    improve = true;
+//                }
 
                 long endTime = System.nanoTime();
                 long totalTime = endTime - startTime;
@@ -87,7 +89,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
     private static void readSeeds(){
         BufferedReader reader;
         String[] informations;
