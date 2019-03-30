@@ -1,27 +1,17 @@
 public class City{
 
     private Integer id;
-    private Integer latitude;
-    private Integer longitude;
-    private boolean visited;
+    private Double latitude;
+    private Double longitude;
 
 
-    public City(Integer latitude,Integer longitude,Integer id){
+    public City(Double latitude, Double longitude, Integer id){
         this.latitude = latitude;
         this.longitude = longitude;
         this.id = id;
-        this.visited = false;
     }
 
     public City(){ }
-
-    public boolean isVisited() {
-        return visited;
-    }
-
-    public void setVisited(boolean visited) {
-        this.visited = visited;
-    }
 
     public Integer getId() {
         return id;
@@ -31,17 +21,17 @@ public class City{
         this.id = id;
     }
 
-    public Integer getLatitude() { return latitude; }
+    public Double getLatitude() { return latitude; }
 
-    public void setLatitude(Integer latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public Integer getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Integer longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
