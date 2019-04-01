@@ -12,7 +12,7 @@ public class Main {
 //        return distance;
 //    }
 
-    public static Long[] seeds;
+    public static long[] seeds;
 
     public static Integer[] costs;
 
@@ -26,10 +26,10 @@ public class Main {
 
     public static void main(String[] args) {
     costs = new Integer[10];
-    seeds = new Long[10];
+    seeds = new long[10];
 
         while(true){
-            //readSeeds();
+            readSeeds();
             for (int i=0;i<10;i++){
                 long startTime = System.nanoTime();
 
@@ -39,9 +39,10 @@ public class Main {
                 DistanceMatrix distanceMatrix = new DistanceMatrix(cities);
 
                 Random random = new Random();
-                //long seed = System.currentTimeMillis();
-                //random.setSeed(seed);
-                random.setSeed(tspReader.getSeed());
+
+                long seed = System.currentTimeMillis();
+                random.setSeed(seed);
+                //random.setSeed(tspReader.getSeed());
 
                 //Algoritmo costruttivo
                 NearestNeighbor neirestNeighbor = new NearestNeighbor(cities, distanceMatrix,random);
@@ -60,11 +61,11 @@ public class Main {
                 System.out.println("\nSA -> Errore relativo = " + ((dist - (double)bestKnowns[i]) / (double)bestKnowns[i]) * 100 + " %");
 
 
-//                if(dist<costs[i]){
-//                    costs[i] = dist;
-//                    seeds[i] = seed;
-//                    improve = true;
-//                }
+                if(dist<costs[i]){
+                    costs[i] = dist;
+                    seeds[i] = seed;
+                    improve = true;
+                }
 
                 long endTime = System.nanoTime();
                 long totalTime = endTime - startTime;

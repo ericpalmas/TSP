@@ -25,7 +25,7 @@ public class SimulatedAnnealing {
 
     public int[] compute() {
         double temperature = 100, alpha = 0.95;
-        int[] next,candidate,current = path.clone();
+        int[] next, candidate, current = path.clone();
         int[] best = current.clone();
         long end;
         int currentDistance , candidateDistance;
@@ -56,8 +56,8 @@ public class SimulatedAnnealing {
 
 
     public int[] executeDoubleBridge(int[] array) {
-        Random random = new Random();
         int pos1, pos2, pos3, pos4;
+        int[] temp = array.clone();
         do {
             pos1 = random.nextInt(array.length - 1);
             pos2 = random.nextInt(array.length - 1);
@@ -65,14 +65,12 @@ public class SimulatedAnnealing {
             pos4 = random.nextInt(array.length - 1);
         } while (pos1 < 0 || pos2 < pos1 || pos3 < pos2 || pos4 < pos3);
 
-        int[] temp_solution = array.clone();
         int k = pos1 + 1;
-
-        System.arraycopy(temp_solution,k,array,pos3 + 1,pos4-pos3);
+        System.arraycopy(temp,k,array,pos3 + 1,pos4-pos3);
         k+=pos4-pos3;
-        System.arraycopy(temp_solution,k,array,pos2 + 1,pos3-pos2);
+        System.arraycopy(temp,k,array,pos2 + 1,pos3-pos2);
         k+=pos3-pos2;
-        System.arraycopy(temp_solution,k,array,pos1 + 1,pos2-pos1);
+        System.arraycopy(temp,k,array,pos1 + 1,pos2-pos1);
         return array;
     }
 }
