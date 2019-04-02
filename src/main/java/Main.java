@@ -30,7 +30,7 @@ public class Main {
 
         while(true){
             readSeeds();
-            for (int i=0;i<10;i++){
+            for (int i=8;i<10;i++){
                 long startTime = System.nanoTime();
 
                 System.out.println(files[i]+"\n\n");
@@ -39,7 +39,6 @@ public class Main {
                 DistanceMatrix distanceMatrix = new DistanceMatrix(cities);
 
                 Random random = new Random();
-
                 long seed = System.currentTimeMillis();
                 random.setSeed(seed);
                 //random.setSeed(tspReader.getSeed());
@@ -51,7 +50,6 @@ public class Main {
                 //Algoritmo euristico
                 TwoOpt twoOpt = new TwoOpt(path, distanceMatrix);
                 int[] path2 = twoOpt.optimize();
-
 
                 //Algoritmo meta-euristico
                 SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(path2, distanceMatrix, startTime, random);
