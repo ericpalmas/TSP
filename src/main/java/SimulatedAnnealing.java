@@ -55,7 +55,7 @@ public class SimulatedAnnealing {
     }
 
 
-    public int[] executeDoubleBridge(int[] array) {
+    private int[] executeDoubleBridge(int[] array) {
         int pos1, pos2, pos3, pos4;
         int[] temp = array.clone();
         do {

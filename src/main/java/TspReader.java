@@ -29,17 +29,17 @@ public class TspReader {
                 break;
             case "d198.tsp":{
                 bestKnown = 15780;
-                seed = 1554104705495L;
+                seed = 1554404587246L;
             }
                 break;
             case "eil76.tsp":{
                 bestKnown = 538;
-                seed = 1554104718840L;
+                seed = 1554106242827L;
             }
                 break;
             case "fl1577.tsp":{
                 bestKnown = 22249;
-                seed = 1554104721105L;
+                seed = 1555458570325L;
             }
                 break;
             case "kroA100.tsp":{
@@ -49,27 +49,27 @@ public class TspReader {
                 break;
             case "lin318.tsp":{
                 bestKnown = 42029;
-                seed = 1554104886471L;
+                seed = 1556347251330L;
             }
                 break;
             case "pcb442.tsp":{
                 bestKnown = 50778;
-                seed = 1554104932677L;
+                seed = 1555228717892L;
             }
                 break;
             case "pr439.tsp":{
                 bestKnown = 107217;
-                seed = 1554105041699L;
+                seed = 1555104967032L;
             }
                 break;
             case "rat783.tsp":{
                 bestKnown = 8806;
-                seed = 1554105135255L;
+                seed = 1554371112973L;
             }
                 break;
             case "u1060.tsp":{
                 bestKnown = 224094;
-                seed = 1554105297274L;
+                seed = 1554351921574L;
             }
                 break;
         }
@@ -111,4 +111,5 @@ public class TspReader {
         city.setLongitude( Double.parseDouble(informations[2]));
         return city;
     }
+
 }
