@@ -9,6 +9,18 @@ public class TspReader {
 
     private double bestKnown;
 
+    private String name;
+
+    private String comment;
+
+    private int dimension;
+
+    private String split;
+
+    private String commentLine;
+
+    private String dimensionLine;
+
     public long getSeed() {
         return seed;
     }
@@ -19,8 +31,12 @@ public class TspReader {
         return bestKnown;
     }
 
-    public TspReader(String filename) {
+    public TspReader(String filename, String commentLine, String dimensionLine, String split) {
         this.filename = filename;
+        this.split = split;
+        this.commentLine = commentLine;
+        this.dimensionLine = dimensionLine;
+
         switch (filename){
             case "ch130.tsp":{
                 bestKnown = 6110;
@@ -84,10 +100,20 @@ public class TspReader {
             int lineCounter = 0;
             while (line != null) {
                 lineCounter++;
+                if(lineCounter==1){
+                    name = line.split(split)[1];
+                }
+                if(lineCounter==Integer.parseInt(commentLine)){
+                    comment = line.split(split)[1];
+                }
+                if(lineCounter==Integer.parseInt(dimensionLine)){
+                    dimension = Integer.parseInt(line.split(split)[1]);
+                }
                 if(lineCounter>7){
                     City city = readNumbers(line);
                     cities.add(city);
                 }
+
                 line = reader.readLine();
                 if(line.charAt(0)=='E'&& line.charAt(1)=='O' && line.charAt(2)=='F')
                     break;
@@ -112,4 +138,15 @@ public class TspReader {
         return city;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
 }

@@ -7,6 +7,7 @@ public class TwoOpt {
         this.path = path;
         this.distanceMatrix = distanceMatrix;
     }
+
     public int[] optimize() {
         int maxGain, gain, maxI = 0, maxJ = 0;
         int size = path.length;
@@ -26,6 +27,7 @@ public class TwoOpt {
         } while (maxGain<0);
         return path;
     }
+
 
     private int calculateGain(int a, int b, int c, int d) {
         int ab = distanceMatrix.getDistanceMatrix()[a][b];

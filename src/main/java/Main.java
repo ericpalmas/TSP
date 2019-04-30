@@ -2,14 +2,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-/*
-* Le parti commentate servono per la ricerca dei seed e per controllare che il percorso sia corretto
-*
-* */
-
 
 public class Main {
 
+
+    /*
+    Tutte queste variabili le utilizzavo per la ricerca dei seed,cosi come le funzioni infondo
+     */
     public static long[] seeds;
 
     public static Integer[] costs;
@@ -23,53 +22,57 @@ public class Main {
     public static boolean improve = false;
 
     public static void main(String[] args) {
-    costs = new Integer[10];
-    seeds = new long[10];
 
-        //while(true){
-            //readSeeds();
-            for (int i=0;i<10;i++){
-                long startTime = System.nanoTime();
-                TspReader tspReader = new TspReader(files[i]);
-                ArrayList<City> cities = tspReader.getCities();
-                DistanceMatrix distanceMatrix = new DistanceMatrix(cities);
+        long startTime = System.nanoTime();
+        TspReader tspReader = new TspReader(args[0],args[1],args[2],args[3]);
+        ArrayList<City> cities = tspReader.getCities();
+        DistanceMatrix distanceMatrix = new DistanceMatrix(cities);
 
-                Random random = new Random();
-                //long seed = System.currentTimeMillis();
-                //random.setSeed(seed);
-                random.setSeed(tspReader.getSeed());
+        Random random = new Random();
+        random.setSeed(tspReader.getSeed());
 
 
-                NearestNeighbor neirestNeighbor = new NearestNeighbor(cities, distanceMatrix,random);
-                int[] path = neirestNeighbor.calculate();
+        NearestNeighbor neirestNeighbor = new NearestNeighbor(cities, distanceMatrix, random);
+        int[] path = neirestNeighbor.calculate();
 
 
-                TwoOpt twoOpt = new TwoOpt(path, distanceMatrix);
-                int[] path2 = twoOpt.optimize();
+        TwoOpt twoOpt = new TwoOpt(path, distanceMatrix);
+        int[] path2 = twoOpt.optimize();
 
 
-                SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(path2, distanceMatrix, startTime, random);
-                int[] finalTour = simulatedAnnealing.compute();
-                int dist = simulatedAnnealing.getTourDistance(finalTour);
+        SimulatedAnnealing simulatedAnnealing = new SimulatedAnnealing(path2, distanceMatrix, startTime, random);
+        int[] finalTour = simulatedAnnealing.compute();
+        int dist = simulatedAnnealing.getTourDistance(finalTour);
 
 
-//                if(dist<costs[i]){
-//                    costs[i] = dist;
-//                    seeds[i] = seed;
-//                    improve = true;
-//                }
-
-                long endTime = System.nanoTime();
-                long totalTime = endTime - startTime;
-                System.out.println(files[i] + ", Distance = " + dist +" ,Error = " + ((dist - (double)bestKnowns[i]) / (double)bestKnowns[i]) * 100 + " % " + ", Execution time = " + totalTime * 1.6667e-11 + " minutes\n");
-
-                //System.out.println(checkPath(cities.size(),finalTour));
+        long endTime = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println("Name = " + args[0] + ", Distance = " + dist + " ,Error = " + ((dist - tspReader.getBestKnown()) / tspReader.getBestKnown()) * 100 + " % " + ", Execution time = " + totalTime * 1.6667e-11 + " minutes\n");
+        writeResult(args[0], tspReader, finalTour);
+    }
 
 
+    private static void writeResult(String out, TspReader tspReader, int[] finalTour){
+
+        File f = new File(tspReader.getName() + ".opt.tour");
+        FileWriter fw = null;
+
+        try {
+            fw = new FileWriter(f);
+            fw.write("NAME : " + tspReader.getName()+ ".opt.tour" + "\n");
+            fw.write("COMMENT : " + tspReader.getComment() + "\n");
+            fw.write("TYPE : TOUR\n");
+            fw.write("DIMENSION : " + tspReader.getDimension() + "\n");
+            fw.write("TOUR_SECTION\n");
+            for(int i=0;i<finalTour.length-1;i++){
+                fw.write((finalTour[i]+1) + "\n");
             }
-            //if(improve)
-               //writeSeeds();
-        //}
+            fw.write("-1\nEOF\n");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void writeSeeds() {
@@ -86,6 +89,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     private static void readSeeds(){
         BufferedReader reader;
         String[] informations;
